@@ -28,16 +28,16 @@ app.get('/it4788/finishedsignup', (req, res) => {
     res.sendFile(__dirname + '/webview/finishSignup.html');
 });
 // use Routes
-app.use('/it4788/auth', require('./routes/auth'));
-app.use('/it4788/friend', require('./routes/friend'));
-app.use('/it4788/post', require('./routes/posts'));
-app.use('/it4788/search', require('./routes/search'));
-app.use('/it4788/comment', require('./routes/comments'));
-app.use('/it4788/like', require('./routes/likes'));
-app.use('/it4788/friend', require('./routes/friend'));
-app.use('/it4788/setting', require('./routes/settings'));
-app.use('/it4788/user', require('./routes/user'));
-app.use('/it4788/chat', require('./routes/chat'));
+app.use('/auth', require('./routes/auth'));
+app.use('/friend', require('./routes/friend'));
+app.use('/post', require('./routes/posts'));
+app.use('/search', require('./routes/search'));
+app.use('/comment', require('./routes/comments'));
+app.use('/like', require('./routes/likes'));
+app.use('/friend', require('./routes/friend'));
+app.use('/setting', require('./routes/settings'));
+app.use('/user', require('./routes/user'));
+app.use('/chat', require('./routes/chat'));
 _io.on('connection', async (socket) => {
 	console.log('Connected: ' + socket.id);
     require('./routes/chat')(socket);
