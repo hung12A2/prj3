@@ -203,6 +203,14 @@ function MenuScreen({ navigation }) {
                                     <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 5 }}>Cài đặt</Text>
                                 </View>
                             </TouchableOpacity>
+                            <TouchableOpacity onPress={() => navigation.navigate('listBlocked')}
+                                style={{ ...styles.item, justifyContent: 'flex-start' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', height: 50 }}>
+                                    <Image style={{ width: 30, height: 30 }}
+                                        source={require('../../assets/icons/icon-watch.png')} />
+                                    <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 5 }}>Danh sách chặn</Text>
+                                </View>
+                            </TouchableOpacity>
                             <TouchableOpacity style={{ ...styles.item, justifyContent: 'flex-start' }}>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', height: 50 }}>
                                     <Image style={{ width: 30, height: 30 }}

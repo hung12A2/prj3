@@ -40,6 +40,7 @@ import { onChangeSocket } from '../Redux/authSlice';
 import AccountSetting from './settings/AccountSetting';
 import NameSetting from './settings/NameSetting';
 import PasswordSetting from './settings/PasswordSetting';
+import ListBlockedScreen from './ListBlockedScreen';
 const socket = io(`${REST_API_URL}`);
 export default function AppNavigator() {
     const netInfo = useNetInfo();
@@ -88,6 +89,7 @@ export default function AppNavigator() {
                 <Stack.Screen name="suggestfriend" component={SuggestFriendScreen} options={{ title: 'Gợi ý' }} />
                 <Stack.Screen name="search" component={SearchScreen} options={{ title: 'Tìm kiếm' }} />
                 <Stack.Screen name="accountSetting" component={AccountSetting} options={{ title: 'Cài đặt' }} />
+                <Stack.Screen name="listBlocked" component={ListBlockedScreen} options={{title: 'Danh sách chặn'}} />
                 <Stack.Screen name="nameSetting" component={NameSetting} options={{ title: 'Tên' }} />
                 <Stack.Screen name="passwordSetting" component={PasswordSetting} options={{ title: 'Đổi mật khẩu' }} />
                 <Stack.Screen name="profile" component={ProfileScreen} options={{ title: 'Trang cá nhân' }}/>

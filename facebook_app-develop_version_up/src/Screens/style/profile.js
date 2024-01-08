@@ -157,9 +157,15 @@ export default styles = StyleSheet.create({
         marginStart: 0.03*width,
         marginTop: 0.03*width
     },
+    
     imageIcon: {
         marginTop: 0.03*width,
         marginStart: 0.35*width,
+    },
+
+    imageIcon2: {
+        marginTop: 0.03*width,
+        marginStart: 0.2*width,
     },
 
     modalBox: {

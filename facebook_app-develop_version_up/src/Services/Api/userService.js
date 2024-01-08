@@ -65,6 +65,10 @@ const getSuggestFriends = (index, count) => {
 const setBlock = (userId, type) => {
   return axios.post(`/friend/set_block?user_id=${userId}&type=${type}`);
 }
+
+const getBlock = (userId, index, count ) => {
+  return axios.post(`/friend/get_list_blocks?user_id=${userId}&index=${index}&count=${count}`);
+}
 const unFriend = (userId) => {
   return axios.post(`/friend/unfriend?user_id=${userId}`);
 }
@@ -88,7 +92,8 @@ const userService = {
   setCoverImage,
   setUserCity,
   setUserCountry,
-  getUserInforWithToken
+  getUserInforWithToken,
+  getBlock
 };
 
 

@@ -76,6 +76,7 @@ function VideoScreen({ route, onSwipeUp, onSwipeDown, navigation }) {
             showsHorizontalScrollIndicator={false}
             data={postListTotal}
             renderItem={(data) => {
+                console.log (data)
                 if (data.index === 0) {
                     return <>
                         <View style={{ flex: 1, backgroundColor: 'white', marginBottom: 10 }}>

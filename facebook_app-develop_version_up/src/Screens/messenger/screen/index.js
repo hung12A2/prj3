@@ -18,11 +18,18 @@ function Messager({ navigation, socket }) {
             thisUserId: user.id
         })
         socket?.on('server_send_list_conversation', (data) => {
-            console.log('server_send_list_conversation', JSON.stringify(data));
-            setListCoversation(data.data);
-            console.log("kkk: " +  typeof listConversation);
+            const newdata = data.data.filter (convers => {
+                return convers.is_blocked === "0"
+            })
+            setListCoversation(newdata);
         })
     }, [socket])
+
+    const partner = listConversation.map (conver => {
+        return conver.partner
+    })
+
+    console.log (partner);
     return (
         <View style={styles.wrapper}>
             <View>
@@ -41,7 +48,7 @@ function Messager({ navigation, socket }) {
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         ref={inputRef}
-                        data={dataFake}
+                        data={partner}
                         renderItem={({ item }) => (
                             <FriendItem item={item} navigation={navigation}/>
                         )}

@@ -75,7 +75,9 @@ const postSlice = createSlice({
     [fetchListPost.fulfilled]: (state, action) => {
       console.log("fetchListPost actiion ful", action);
       state.isPostListLoading = false;
-      state.postList = action?.payload?.data?.posts;
+      state.postList = action?.payload?.data?.posts.filter (post => {
+        return post.is_blocked === "0";
+      });
       postService.updateListPostsCache(action?.payload?.data?.posts);
     },
     [fetchListPost.rejected]: (state, action) => {

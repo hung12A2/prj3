@@ -19,7 +19,7 @@ class FriendItem extends Component {
                         />
                     </View>
                     <View style={styles.name}>
-                    <Text style={styles.name}>{item.name}</Text>
+                    <Text style={styles.name}>{item.name? item.name: item.username}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
