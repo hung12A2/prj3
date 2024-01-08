@@ -22,6 +22,12 @@ const MAX_FRIEND_NUMBER = 500;
 //   "index": 3,
 //   "count": 10
 // }
+function is_blocked(user, author) {
+  if (user && author && author.blockedList && author.blockedList.findIndex((element) => { return element.user.toString() == user._id.toString() }) != -1) return "1";
+  if (user && author && user.blockedList && user.blockedList.findIndex((element) => { return element.user.toString() == author._id.toString() }) != -1) return "1";
+  return "0";
+}
+
 router.post('/get_requested_friends', verify, async (req, res) => {
   let { index, count } = req.query;
   let id = req.user.id;
@@ -319,6 +325,7 @@ router.post('/set_accept_friend', verify, async (req, res) => {
   }
 })
 
+//
 
 router.post("/get_list_blocks", verify, async (req, res) => {
   let { token, index, count } = req.query;
@@ -531,7 +538,9 @@ router.post('/get_list_suggested_friends', verify, async (req, res) => {
     thisUser = await User.findById(id);
     if (!thisUser) return callRes(res, responseError.NO_DATA_OR_END_OF_LIST_DATA, 'thisUser');
     const listFriendId = thisUser.friends.map(o => o.friend);
+
     if (thisUser.friends.length > 0) {
+
       for (let x of thisUser.friends) {
         targetUser = await User.findById(x.friend).select({ "friends": 1 });
         if (!targetUser) return callRes(res, responseError.NO_DATA_OR_END_OF_LIST_DATA, 'targetUser');
@@ -553,12 +562,15 @@ router.post('/get_list_suggested_friends', verify, async (req, res) => {
         }
       }
     }
+
     if (list_users.length == 0) {
       let users = await User.find({ 'user._id': { $ne: id } })
-        .select({ "friends": 1, "_id": 1, "name": 1, "avatar": 1, "friendRequestSent" : 1, "friendRequestReceived" : 1 })
+        .select({ "friends": 1, "_id": 1, "name": 1, "avatar": 1, "friendRequestSent" : 1, "friendRequestReceived" : 1, "blockedList":1 })
         .sort("-createdAt");
       if (!users) return callRes(res, responseError.NO_DATA_OR_END_OF_LIST_DATA, 'no other user');
+     
       for (let y of users) {
+       
         if (listFriendId.includes(y._id)) continue;
         let e = {
           id: y._id,
@@ -568,6 +580,10 @@ router.post('/get_list_suggested_friends', verify, async (req, res) => {
           isFriendStatus: 0 // = 0 nếu 2 bên chưa gửi lời mời nào cho nhau, 1 nếu bạn đã gửi lời mời, 
         //2 nếu họ đã gửi lời mời cho bạn, -1 nếu friend chính là thisUser
         }
+        if (is_blocked (thisUser,y) == 1 ) {
+          continue
+        }
+        if (thisUser)
         if (thisUser.friends.length > 0 && y.friends.length > 0) {
           e.same_friends = countSameFriend(thisUser.friends, y.friends);
         }

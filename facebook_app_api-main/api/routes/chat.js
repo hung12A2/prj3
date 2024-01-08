@@ -10,6 +10,12 @@ const { responseError, callRes } = require('../response/error');
 const checkInput = require('../utils/validInput');
 const validTime = require('../utils/validTime');
 
+function is_blocked(user, author) {
+    if (user && author && author.blockedList && author.blockedList.findIndex((element) => { return element.user.toString() == user._id.toString() }) != -1) return "1";
+    if (user && author && user.blockedList && user.blockedList.findIndex((element) => { return element.user.toString() == author._id.toString() }) != -1) return "1";
+    return "0";
+}
+
 async function verifySocketToken(token) {
     try {
         if (!token) return false;
@@ -260,6 +266,17 @@ module.exports = function (socket) {
         // message = "OK";
         // res.json({ code, message, data });
     });
+
+    socket.on ('client_call_video',(data) => {
+        const fullname = data.fullname
+        const thisuser = data.thisuser;
+        const targetuser = data.targetuser;
+        const callRoomId = (thisuser < targetuser)? (thisuser + "_" + targetuser) : (targetuser + "_" + thisuser)
+        socket.join(callRoomId);
+        socket.to(callRoomId).emit('server_call_video', {id:data.Room_id, fullname: fullname})
+  
+       // console.log (data);
+    })
     //Not API
     socket.on('client_leave_conversation', async (data) => {
         try {
@@ -288,6 +305,7 @@ module.exports = function (socket) {
             socket.emit('server_send_conversation', { message: "failed" });
         }
     });
+    //
     socket.on('client_add_dialog', async (data) => {
         try {
             const { senderId, targetUserId, token, content } = data;
@@ -574,6 +592,7 @@ module.exports = function (socket) {
     //     }
     //     return callRes(res, responseError.OK, 'Successfully set read message');
     // });
+   
 
     socket.on('client_get_list_conversation', async (dataSocket) => {
         const { token, thisUserId } = dataSocket;
@@ -598,7 +617,7 @@ module.exports = function (socket) {
         for (let conversation in conversationSecond) {
             conversations.push(conversationSecond[conversation]);
         }
-        //console.log(conversations);
+        console.log(conversations);
         // let endFor = conversations.length < index + count ? conversations.length : index + count;
         for (let i = 0; i < conversations.length; i++) {
             let x = conversations[i];
@@ -616,7 +635,8 @@ module.exports = function (socket) {
                     message: null,
                     created: null,
                 },
-                numNewMessage: 0
+                numNewMessage: 0,
+                is_blocked: true ,
             }
             let partner, lastDialog;
             if (x.firstUser == thisUserId) {
@@ -632,6 +652,7 @@ module.exports = function (socket) {
             conversationInfo.partner.avatar = partner.avatar.url;
             conversationInfo.lastMessage.message = lastDialog?.content;
             conversationInfo.lastMessage.created = lastDialog?.created;
+            conversationInfo.is_blocked = is_blocked (await User.findById(thisUserId), partner)
             var numNewMessage = 0;
             for (let j = x.dialog.length - 1; j >= 0; j--) {
                 if (x.dialog[j].unread == "1" && x.dialog[j].sender.toString() !== thisUserId) {
